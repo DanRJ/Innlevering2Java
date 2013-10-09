@@ -1,0 +1,6 @@
+package db;
+
+public class DBHandler {
+	private ConnectToDB db;
+	private Connection connection;
+}

@@ -1,0 +1,17 @@
+package db;
+
+import java.sql.Connection;
+
+public class DBHandler implements AutoCloseable{
+	
+	private ConnectToDB db;
+	private Connection connection;
+
+	public DBHandler(String user, String password) {
+		db = new ConnectToDB(user, password);
+	}
+	
+	public void close() throws Exception {
+		db.close();
+	}
+}

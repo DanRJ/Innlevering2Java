@@ -1,0 +1,17 @@
+package maintenance;
+
+public class Account {
+	private int accountNumber;
+	private int balance;
+	private double interest;
+	
+	public Account() {
+		this(0, 0, 0.0);
+	}
+	
+	public Account(int inAccountNumber, int inBalance, double inInterest) {
+		accountNumber = inAccountNumber;
+		balance = inBalance;
+		interest = inInterest;
+	}
+}

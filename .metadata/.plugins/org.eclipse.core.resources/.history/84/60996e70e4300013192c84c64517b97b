@@ -1,0 +1,8 @@
+package db;
+
+import java.sql.Connection;
+
+public class DBHandler {
+	private ConnectToDB db;
+	private Connection connection;
+}
