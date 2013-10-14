@@ -1,0 +1,72 @@
+package maintenance;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
+
+import javax.naming.NamingException;
+
+import db.ConnectToDB;
+import db.DBHandler;
+
+public class AccountMaintenance implements AutoCloseable {
+	private ConnectToDB db;
+	private static Connection connection;
+	private Map<String, Account> mapOfAccounts;
+
+	public AccountMaintenance(String user, String password) throws SQLException {
+		db = new ConnectToDB(user, password);
+		connection = db.getConnection();
+	}
+
+	public static void updateAccounts(String tableName, String tableUpdate)
+			throws NamingException, SQLException, Exception {
+
+	}
+
+	public static Map<String, Account> getAccounts(String tableName)
+			throws SQLException {
+		try (Statement stmt = connection.createStatement()) {
+
+			String query = "Select * from " + tableName;
+
+			ResultSet rs = stmt.executeQuery(query);
+			ResultSetMetaData rsMetaData = rs.getMetaData();
+
+			ArrayList<String> content = new ArrayList<String>();
+			ArrayList<Account> account = new ArrayList<Account>();
+
+			while (rs.next()) {
+				for (int i = 1; i <= rsMetaData.getColumnCount(); i++) {
+					content.add(rs.getObject(i).toString());
+				}
+			}
+
+			for (int i = 0; i < content.size(); i += rsMetaData
+					.getColumnCount()) {
+				account.add(new Account(Integer.valueOf(content.get(i)),
+						Integer.valueOf(content.get(i + 1)), Double
+								.valueOf(content.get(i + 2))));
+			}
+
+			for (Account account2 : account) {
+				mapOfAccounts.put(String.valueOf(account2.getAccountNumber()),
+						account2);
+			}
+		}
+
+		return mapOfAccounts;
+	}
+
+	public static Account getAccount(String tableName, String accountNumber) {
+		return null;
+	}
+
+	@Override
+	public void close() throws Exception {
+		db.close();
+	}
+}

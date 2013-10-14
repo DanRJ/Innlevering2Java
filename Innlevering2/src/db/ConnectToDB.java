@@ -1,8 +1,10 @@
 package db;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
@@ -17,7 +19,7 @@ public class ConnectToDB implements AutoCloseable {
 	private MysqlDataSource ds;
 	
 	public ConnectToDB (String bruker, String passord) throws SQLException {
-		this(bruker, passord, "Innlevering2");
+		this(bruker, passord, "innlevering2");
 	}
 	
 	public ConnectToDB (String user, String password, String dbName) throws SQLException {
@@ -25,6 +27,7 @@ public class ConnectToDB implements AutoCloseable {
 		ds.setUser(user);
 		ds.setPassword(password);
 		ds.setUrl(URL + dbName);
+		
 		connection = ds.getConnection();
 	}
 	

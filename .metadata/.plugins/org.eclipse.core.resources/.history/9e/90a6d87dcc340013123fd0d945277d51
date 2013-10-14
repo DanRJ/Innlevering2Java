@@ -1,0 +1,49 @@
+package maintenance;
+
+public class Account {
+	private int accountNumber;
+	private int balance;
+	private double interest;
+	
+	public Account() {
+		this(0, 0, 0.0);
+	}
+	
+	public Account(String string) {
+		if (condition) {
+			
+		}
+	}
+	
+	public Account(int inAccountNumber, int inBalance, double inInterest) {
+		setAccountNumber(inAccountNumber);
+		setBalance(inBalance);
+		setInterest(inInterest);
+	}
+
+	private void setAccountNumber(int inAccountNumber) {
+		accountNumber = inAccountNumber;
+	}
+	
+	public int getAccountNumber() {
+		return accountNumber;
+	}
+	
+	private void setBalance(int inBalance) {
+		balance = inBalance;
+	}
+	
+	public int getBalance() {
+		return balance;
+	}
+	
+	private void setInterest(double inInterest) {
+		interest = inInterest;
+	}
+	
+	public double getInterest() {
+		return interest;
+	}
+
+
+}

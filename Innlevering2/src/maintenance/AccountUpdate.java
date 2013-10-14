@@ -1,0 +1,23 @@
+package maintenance;
+
+public class AccountUpdate {
+	private String strUpdate;
+	private double strValue;
+	
+	public AccountUpdate() {
+		this("", 0.0);
+	}
+	
+	public AccountUpdate(String inStrUpdate, double inStrValue) {
+		setStrUpdate(inStrUpdate);
+		setStrValue(inStrValue);
+	}
+
+	private void setStrUpdate(String inStrUpdate) {
+		strUpdate = inStrUpdate;
+	}
+
+	private void setStrValue(double inStrValue) {
+		strValue = inStrValue;
+	}
+}

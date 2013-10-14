@@ -38,6 +38,10 @@ public class Account {
 	public double getInterest() {
 		return interest;
 	}
+	
+	public String toString() {
+		return getAccountNumber() + " " + getBalance() + " " + getInterest();
+	}
 
 
 }

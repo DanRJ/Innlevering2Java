@@ -1,0 +1,33 @@
+package maintenance;
+
+import java.sql.SQLException;
+import java.util.*;
+
+import javax.naming.NamingException;
+
+import db.ConnectToDB;
+import db.DBHandler;
+
+
+public class AccountMaintenance {
+	private ConnectToDB db;
+	private Connection connection;
+	
+	public AccountMaintenance(String user, String password) throws SQLException{
+		db = new ConnectToDB(user, password);
+		connection = db.getConnection();
+	}
+
+	public static void updateAccounts(String tableName, String tableUpdate) throws NamingException, SQLException, Exception {
+		
+	}
+	
+	public static Map<String, Account> getAccounts(String tableName) {
+		
+		return null;
+	}
+	
+	public static Account getAccount(String tableName, String accountNumber) {
+		return null;
+	}
+}

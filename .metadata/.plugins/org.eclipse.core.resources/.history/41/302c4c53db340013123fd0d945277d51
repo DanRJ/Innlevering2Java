@@ -1,0 +1,80 @@
+package db;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.sql.Statement;
+
+import javax.naming.NamingException;
+
+
+import maintenance.Account;
+
+/**
+ * Jeg går utifra at tables er lagd allerede og har derfor
+ * ikke valgt å lage metodene createTables, addData osv.
+ * 
+ * @author Daniel Rustad Johansen
+ *
+ */
+public class DBHandler implements AutoCloseable{
+	
+	private ConnectToDB db;
+	private Connection connection;
+	
+	public DBHandler(String user, String password) throws SQLException {
+		db = new ConnectToDB(user, password);
+		connection = db.getConnection();
+	}
+	
+	public void getTable(String tableName) throws SQLException {
+		try(Statement stmt = connection.createStatement()) {
+			Map<String, Account> mapOfAccounts;
+			
+			String query = "Select * from " + tableName;
+			
+			ResultSet rs = stmt.executeQuery(query);
+			ResultSetMetaData rsMetaData = rs.getMetaData();
+			
+			int[] columnCounters = new int[rsMetaData.getColumnCount()];
+			
+			//Uthenting samt formatering av kolonner
+			for (int i = 1; i <= rsMetaData.getColumnCount(); i++) {
+				String columnName = rsMetaData.getColumnName(i);
+			}
+
+			
+			int count = 0;
+			ArrayList<String> content = new ArrayList<String>();
+			ArrayList<Account> account = new ArrayList<Account>();
+			
+			while (rs.next()) {
+				for (int i = 1; i <= rsMetaData.getColumnCount(); i++) {
+					content.add(rs.getObject(i).toString());
+					System.out.println(i);
+				}
+				count++;
+			}
+			for (int i = 0; i <= content.size(); i++) {
+				account.add(new Account(
+						Integer.valueOf(content.get(0)), 
+						Integer.valueOf(content.get(1)),
+						Double.valueOf(content.get(2))
+						));
+			}
+			System.out.print("count = " + count + "\n");
+			for (Account account2 : account) {
+				System.out.println(account2);
+			}
+			
+		}
+	}
+	
+	public void close() throws Exception {
+		db.close();
+	}
+}

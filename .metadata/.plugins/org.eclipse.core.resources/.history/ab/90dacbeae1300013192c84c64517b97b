@@ -1,9 +1,0 @@
-package maintenance;
-
-import java.sql.*;
-import java.util.*;
-import db.ConnectToDB;
-
-public class AccountMaintenance {
-	
-}

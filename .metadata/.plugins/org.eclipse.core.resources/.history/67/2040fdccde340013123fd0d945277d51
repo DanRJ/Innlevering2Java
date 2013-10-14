@@ -1,0 +1,14 @@
+package maintenance;
+
+public class AccountUpdate {
+	private String strUpdate;
+	private double strValue;
+	
+	public AccountUpdate() {
+		this("", 0.0);
+	}
+	
+	public AccountUpdate(String inStrUpdate, double inStrValue) {
+		
+	}
+}
