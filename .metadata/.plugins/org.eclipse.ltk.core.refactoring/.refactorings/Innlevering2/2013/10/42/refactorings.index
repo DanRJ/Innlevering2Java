@@ -1,3 +1,11 @@
 1381764428658	Delete element
 1381764759747	Rename local variable 'size'
 1381777633338	Rename local variable 'makeNewAccounts'
+1381846005458	Rename local variable 'getValueAtKey'
+1381846157911	Rename method 'addToBalance'
+1381846165949	Rename method 'removeFromBalance'
+1381846172813	Rename method 'decreaseFromBalance'
+1381846250158	Rename local variable 'remove'
+1381846256171	Rename local variable 'addTo'
+1381851230131	Rename method 'updateValues'
+1381851242359	Rename method 'applyStrValues'

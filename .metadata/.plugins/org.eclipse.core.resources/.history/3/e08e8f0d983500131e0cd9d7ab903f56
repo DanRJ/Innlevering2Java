@@ -15,23 +15,7 @@ public class Account {
 		setInterest(inInterest);
 	}
 
-	public void increaseBalance(int addToBalance) {
-		balance += addToBalance;
-	}
-	
-	public void decreaseBalance(int removeFromBalance) {
-		balance -= removeFromBalance;
-	}
-	
-	public void increaseInterest(double addToInterest) {
-		interest += addToInterest;
-	}
-	
-	public void decreaseInterest(double removeFromInterest) {
-		interest -= removeFromInterest;
-	}
-	
-	public void setAccountNumber(int inAccountNumber) {
+	private void setAccountNumber(int inAccountNumber) {
 		accountNumber = inAccountNumber;
 	}
 	
@@ -39,7 +23,7 @@ public class Account {
 		return accountNumber;
 	}
 	
-	public void setBalance(int inBalance) {
+	private void setBalance(int inBalance) {
 		balance = inBalance;
 	}
 	
@@ -47,7 +31,7 @@ public class Account {
 		return balance;
 	}
 	
-	public void setInterest(double inInterest) {
+	private void setInterest(double inInterest) {
 		interest = inInterest;
 	}
 	
@@ -55,9 +39,8 @@ public class Account {
 		return interest;
 	}
 	
-	
 	public String toString() {
-		return getAccountNumber() + "\t" + getBalance() + "\t" + getInterest();
+		return getAccountNumber() + " " + getBalance() + " " + getInterest();
 	}
 
 

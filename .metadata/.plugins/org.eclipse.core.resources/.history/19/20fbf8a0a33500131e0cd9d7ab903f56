@@ -15,20 +15,16 @@ public class Account {
 		setInterest(inInterest);
 	}
 
-	public void increaseBalance(int addToBalance) {
-		balance += addToBalance;
+	public void increaseBalance(int addTo) {
+		balance += addTo;
 	}
 	
-	public void decreaseBalance(int removeFromBalance) {
-		balance -= removeFromBalance;
+	public void decreaseBalance(int remove) {
+		balance -= remove;
 	}
 	
 	public void increaseInterest(double addToInterest) {
 		interest += addToInterest;
-	}
-	
-	public void decreaseInterest(double removeFromInterest) {
-		interest -= removeFromInterest;
 	}
 	
 	public void setAccountNumber(int inAccountNumber) {
