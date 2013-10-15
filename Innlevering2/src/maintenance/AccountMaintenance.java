@@ -11,6 +11,8 @@ import db.ConnectToDB;
 
 public class AccountMaintenance implements AutoCloseable {
 	private static final String QUERY = "SELECT * FROM ";
+	private static final int NUMBER_OF_COLUMNS = 3;
+	private static Map<String, Account> accounts;
 	private ConnectToDB db;
 	private static Connection connection;
 
@@ -20,17 +22,89 @@ public class AccountMaintenance implements AutoCloseable {
 	}
 
 	public static void updateAccounts(String tableName, String tableUpdate) throws SQLException {
-		Map<String, Account> accounts = getAccounts(tableName);
+		//Mapper ut accounts
+		accounts = getAccounts(tableName);
 		
+		//Query databasen, henter ut data, legger det i en list
+		List<String> content = dbQuery(QUERY + tableUpdate);
+		
+		LinkedList<AccountUpdate> accountUpdates = (LinkedList<AccountUpdate>) makeNewAccountUpdates(content, NUMBER_OF_COLUMNS);
+
+		for (AccountUpdate key : accountUpdates) {
+			if (accounts.containsKey(String.valueOf(key.getAccountNumber()))) {
+				
+				applyStrUpdates(key);
+				
+			}else {
+				int checkAccNumber = key.getAccountNumber();
+				if (String.valueOf(checkAccNumber).length() == 8) {
+					accounts.put(
+							String.valueOf(checkAccNumber), 
+							new Account(
+										key.getAccountNumber(),
+										Integer.valueOf(key.getStrUpdate()),
+										key.getStrValue()
+										)
+							);
+				}
+			}
+		}//End foreach
+		updateValuesInDB(accounts, tableName);
 	}
 
+	public static void updateValuesInDB(Map<String, Account> inAccountMap, String tableName) throws SQLException {
+		//UPDATE tableName
+		//SET balance = 'balansen i mappet', interest = 'interesten i mappet'
+		//WHERE accountNumber = 'accountnumber i mappen'
+		Map<String, Account> dbCheck = getAccounts(tableName);
+		String query = "UPDATE " + tableName;
+		for (String key : inAccountMap.keySet()) {
+			queryDB();
+		}
+		
+	}
+	
+	private static void queryDB() {
+		
+	}
+	
+	private static void applyStrUpdates(AccountUpdate key) {
+		//Variabelen nedenfor blir brukt hyppig under de igjen:
+		String getUpdateValueAtKey = key.getStrUpdate();
+		double getValueAtKey = key.getStrValue();
+		String IntToString = String.valueOf(key.getAccountNumber());
+		
+		if (getUpdateValueAtKey.equals("b+")) {
+			accounts.get(IntToString).increaseBalance((int) getValueAtKey);
+		}
+		else if (getUpdateValueAtKey.equals("b-")) {
+			accounts.get(IntToString).decreaseBalance((int) getValueAtKey);
+		}
+		else if (getUpdateValueAtKey.equals("i+")) {
+			accounts.get(IntToString).increaseInterest(getValueAtKey);
+		}
+		else if (getUpdateValueAtKey.equals("i-")) {
+			accounts.get(IntToString).decreaseInterest(getValueAtKey);
+		}
+		else if (getUpdateValueAtKey.equals("b")) {
+			accounts.get(IntToString).setBalance((int) getValueAtKey);
+		}
+		else if (getUpdateValueAtKey.equals("i")) {
+			accounts.get(IntToString).setInterest(getValueAtKey);
+		}
+		else if (getUpdateValueAtKey.equals("")) {
+			System.out.println("No update value found!");
+		}
+
+	}
+	
 	public static Map<String, Account> getAccounts(String tableName) throws SQLException {
 		try (Statement stmt = connection.createStatement()) {
 			
 			Map<String, Account> mapOfAccounts = new HashMap<String, Account>();
 			
 			List<String> content = dbQuery(QUERY + tableName);
-			List<Account> newAccountObjects = makeNewAccounts(content, 3);
+			List<Account> newAccountObjects = makeNewAccounts(content, NUMBER_OF_COLUMNS);
 			
 			for (Account account2 : newAccountObjects) {
 				mapOfAccounts.put(String.valueOf(account2.getAccountNumber()), account2);
@@ -85,8 +159,24 @@ public class AccountMaintenance implements AutoCloseable {
 		return account;
 
 	}
+	
+	private static List<AccountUpdate> makeNewAccountUpdates(List<String> content, int numberOfColumns) {
+		List<AccountUpdate> accountUpdates = new LinkedList<AccountUpdate>();
+		
+		for (int i = 0; i < content.size(); i += numberOfColumns) {
+			accountUpdates.add(new AccountUpdate(
+					Integer.valueOf(content.get(i)),
+					String.valueOf(content.get(i + 1)),
+					Double.valueOf(content.get(i + 2))
+					));
+		}
+		
+		return accountUpdates;
+	}
+	
 	@Override
 	public void close() throws Exception {
+		connection.close();
 		db.close();
 	}
 }

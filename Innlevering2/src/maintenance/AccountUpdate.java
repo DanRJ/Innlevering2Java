@@ -1,23 +1,42 @@
 package maintenance;
 
 public class AccountUpdate {
+	private int accountNumber;
 	private String strUpdate;
 	private double strValue;
 	
 	public AccountUpdate() {
-		this("", 0.0);
+		this(0, "", 0.0);
 	}
 	
-	public AccountUpdate(String inStrUpdate, double inStrValue) {
+	public AccountUpdate(int inAccountNumber, String inStrUpdate, double inStrValue) {
+		setAccountNumber(inAccountNumber);
 		setStrUpdate(inStrUpdate);
 		setStrValue(inStrValue);
 	}
 
-	private void setStrUpdate(String inStrUpdate) {
+	public int getAccountNumber() {
+		return accountNumber;
+	}
+	public void setAccountNumber(int inAccountNumber) {
+		accountNumber = inAccountNumber;
+	}
+
+	public String getStrUpdate() {
+		return strUpdate;
+	}
+	public void setStrUpdate(String inStrUpdate) {
 		strUpdate = inStrUpdate;
 	}
 
-	private void setStrValue(double inStrValue) {
+	public double getStrValue() {
+		return strValue;
+	}
+	public void setStrValue(double inStrValue) {
 		strValue = inStrValue;
+	}
+	
+	public String toString() {
+		return accountNumber + "\t" + strUpdate + "\t" + strValue;
 	}
 }
