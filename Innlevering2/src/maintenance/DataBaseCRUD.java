@@ -26,6 +26,12 @@ public class DataBaseCRUD implements AutoCloseable{
 		connection = db.getConnection();
 	}
 	
+	/**
+	 * Sends a query to a database, returns the row data in a List
+	 * @param query			a String which is an SQL query
+	 * @return				a List<String>
+	 * @throws SQLException
+	 */
 	public List<String> dbQuery(String query) throws SQLException {
 		try(Statement stmt = connection.createStatement()) {
 			
@@ -43,8 +49,14 @@ public class DataBaseCRUD implements AutoCloseable{
 		}
 	}
 	
+	/**
+	 * Collects everything from a table, and puts them into a Map<String, Account>
+	 * 
+	 * @param tableName					a table in the database
+	 * @return A Map<String, Account>	a Map
+	 * @throws SQLException				
+	 */
 	public Map<String, Account> getAccountsFromDB(String tableName) throws SQLException {
-		try (Statement stmt = connection.createStatement()) {
 			
 			Map<String, Account> mapOfAccounts = new HashMap<String, Account>();
 			
@@ -56,29 +68,29 @@ public class DataBaseCRUD implements AutoCloseable{
 			}
 			
 			return mapOfAccounts;
-		}
 	}
 	
-	private void statementIntoDB(String query2) throws SQLException {
+	/**
+	 * Sends a query into the database
+	 * 
+	 * @param query2		a string that is an SQL query
+	 * @throws SQLException 
+	 */
+	private void sendStatementIntoDB(String query2) throws SQLException {
 		try(Statement stmt = connection.createStatement()) {
 			stmt.executeUpdate(query2);
 		}
 	}
 
-	private List<Account> makeNewAccounts(List<String> content, int numberOfColumns) {
-		List<Account> account = new ArrayList<Account>();
-
-		for (int i = 0; i < content.size(); i += numberOfColumns) {
-			account.add(new Account(
-					Integer.valueOf(content.get(i)),
-					Integer.valueOf(content.get(i + 1)), 
-					Double.valueOf(content.get(i + 2))
-					));
-		}
-		return account;
-	}
 	
-	public String insertIntoDB(String tableName, Account inAccount) throws SQLException {
+	/**
+	 * Returns a String which is an INSERT query in SQL with values for an Account.
+	 * 
+	 * @param tableName		a table in the database
+	 * @param inAccount		an Account object
+	 * @return				a String which is a SQL query
+	 */
+	public String insertIntoDB(String tableName, Account inAccount) {
 			String query = "INSERT INTO " + tableName + " VALUES (";
 			String values = inAccount.getAccountNumber() + ", " + inAccount.getBalance() + ", " + inAccount.getInterest() + " );";
 			
@@ -87,6 +99,13 @@ public class DataBaseCRUD implements AutoCloseable{
 			return query;
 	}
 
+	/**
+	 * Updates the row values in a table
+	 * 
+	 * @param inAccountMap	a Map of Accounts
+	 * @param tableName		name of the table
+	 * @throws SQLException	
+	 */
 	public void updateValuesInDB(Map<String, Account> inAccountMap, String tableName) throws SQLException {
 		Map<String, Account> dbCheck = getAccountsFromDB(tableName);
 		String query = "UPDATE " + tableName + "\n";
@@ -97,17 +116,48 @@ public class DataBaseCRUD implements AutoCloseable{
 			
 			query += set + where;
 			
-			statementIntoDB(query);
+			sendStatementIntoDB(query);
 			
 			query = "UPDATE " + tableName + "\n";
 			
 			if (!dbCheck.containsKey(key)) {
-				statementIntoDB(insertIntoDB(tableName, inAccountMap.get(key)));
+				sendStatementIntoDB(insertIntoDB(tableName, inAccountMap.get(key)));
 			}
 		}
 		
 	}
+	
+	/**
+	 * Returns a List of Account objects,
+	 * it receives a list of Strings which will be converted
+	 * to Accounts and put into a List.
+	 * 
+	 * @param content			a List of Strings
+	 * @param numberOfColumns	the number of columns in the database table
+	 * @return 					a List of Accounts
+	 */
+	private List<Account> makeNewAccounts(List<String> content, int numberOfColumns) {
+		List<Account> account = new ArrayList<Account>();
+		
+		for (int i = 0; i < content.size(); i += numberOfColumns) {
+			account.add(new Account(
+					Integer.valueOf(content.get(i)),
+					Integer.valueOf(content.get(i + 1)), 
+					Double.valueOf(content.get(i + 2))
+					));
+		}
+		return account;
+	}
 
+	/**
+	 * Returns a List of AccountUpdate objects,
+	 * it receives a list of Strings which will be converted
+	 * into AccountUpdate objects and put into a List.
+	 * 
+	 * @param content			a List of Strings
+	 * @param numberOfColumns	the number of columns in the database table
+	 * @return
+	 */
 	public List<AccountUpdate> makeNewAccountUpdates(List<String> content, int numberOfColumns) {
 		List<AccountUpdate> accountUpdates = new LinkedList<AccountUpdate>();
 		
@@ -122,23 +172,13 @@ public class DataBaseCRUD implements AutoCloseable{
 		return accountUpdates;
 	}
 
-
 	/**
-	 * A crude way to reset a table.
+	 * An extremely crude way of inserting default rows 
+	 * but great for troubleshooting, so I will leave it in.
+	 * The way to use it is to write this in the client-class:
+	 * dbCRUD.insertDefaultRowsInTable(NameOfTable);
 	 * 
-	 * @throws SQLException
-	 */
-	public void deleteRowsFromTable(String tableName) throws SQLException {
-		try(Statement stmt = connection.createStatement()) {
-			String queryDelete = "DELETE FROM " + tableName;
-			stmt.executeUpdate(queryDelete);
-		}
-	}
-	
-	/**
-	 * An extremely crude way of inserting default rows
-	 * 
-	 * @param tableName
+	 * @param tableName		name of a database table
 	 * @throws SQLException
 	 */
 	public void insertDefaultRowsInTable(String tableName) throws SQLException {
@@ -147,24 +187,37 @@ public class DataBaseCRUD implements AutoCloseable{
 		
 		deleteRowsFromTable(tableName);
 		
-		try(Statement stmt = connection.createStatement()) {
-			String queryInsert = "";
-			acc1 = new Account(11111111, 1000, 3.50);
-			acc2 = new Account(22222222, 2000, 2.50);
-			acc3 = new Account(33333333, 3000, 1.50);
-			
-			listOfAcc.add(acc1);
-			listOfAcc.add(acc2);
-			listOfAcc.add(acc3);
-			
-			for (int i = 0; i < listOfAcc.size(); i++) {
-				queryInsert = insertIntoDB(tableName, listOfAcc.get(i));
-				stmt.executeUpdate(queryInsert);
-				queryInsert = "";
-			}
- 		}
+		String queryInsert = "";
+		acc1 = new Account(11111111, 1000, 3.50);
+		acc2 = new Account(22222222, 2000, 2.50);
+		acc3 = new Account(33333333, 3000, 1.50);
+		
+		listOfAcc.add(acc1);
+		listOfAcc.add(acc2);
+		listOfAcc.add(acc3);
+		
+		for (int i = 0; i < listOfAcc.size(); i++) {
+			queryInsert = insertIntoDB(tableName, listOfAcc.get(i));
+			sendStatementIntoDB(queryInsert);
+			queryInsert = "";
+		}
 	}
+	
+	/**
+	 * A crude way to reset a table.
+	 * This is not part of the assignment but great for troubleshooting, so I will leave it in.
+	 * 
+	 * @throws SQLException
+	 */
+	public void deleteRowsFromTable(String tableName) throws SQLException {
+			String queryDelete = "DELETE FROM " + tableName;
+			sendStatementIntoDB(queryDelete);
+	}
+	
 
+	/**
+	 * Is implemented automatically when using AutoClosable
+	 */
 	@Override
 	public void close() throws Exception {
 		connection.close();

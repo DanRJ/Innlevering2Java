@@ -833,3 +833,19 @@ java.lang.ArrayIndexOutOfBoundsException: 12
 
 !ENTRY org.eclipse.ui 4 4 2013-10-15 16:24:19.194
 !MESSAGE Referenced part does not exist yet: org.eclipse.ui.views.ProblemView.
+!SESSION 2013-10-16 21:06:20.081 -----------------------------------------------
+eclipse.buildId=M20120914-1800
+java.version=1.7.0_21
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.dsl.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.dsl.product
+
+!ENTRY org.eclipse.core.resources 2 10035 2013-10-16 21:06:25.888
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY org.eclipse.ui 4 4 2013-10-16 21:31:01.856
+!MESSAGE Referenced part does not exist yet: org.eclipse.ui.views.ProblemView.
+
+!ENTRY com.android.ide.eclipse.ddms 4 0 2013-10-16 21:31:02.764
+!MESSAGE DDMS files not found: C:\Users\d\Desktop\adt-bundle-windows-x86-20130729\sdk\platform-tools\adb.exe C:\Users\d\Desktop\adt-bundle-windows-x86-20130729\sdk\tools\hprof-conv.exe C:\Users\d\Desktop\adt-bundle-windows-x86-20130729\sdk\tools\traceview.bat 
