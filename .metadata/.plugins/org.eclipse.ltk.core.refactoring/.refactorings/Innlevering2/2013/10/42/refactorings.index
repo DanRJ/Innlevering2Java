@@ -9,3 +9,4 @@
 1381846256171	Rename local variable 'addTo'
 1381851230131	Rename method 'updateValues'
 1381851242359	Rename method 'applyStrValues'
+1381855225997	Rename method 'preparedStatementIntoDB'
