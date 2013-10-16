@@ -5,13 +5,13 @@ import java.math.BigDecimal;
 public class Account {
 	private int accountNumber;
 	private int balance;
-	private double interest;
+	private BigDecimal interest;
 	
 	public Account() {
 		this(0, 0, 0.0);
 	}
 	
-	public Account(int inAccountNumber, int inBalance, double inInterest) {
+	public Account(int inAccountNumber, int inBalance, BigDecimal inInterest) {
 		setAccountNumber(inAccountNumber);
 		setBalance(inBalance);
 		setInterest(inInterest);
@@ -49,17 +49,12 @@ public class Account {
 		return balance;
 	}
 	
-	public void setInterest(double inInterest) {
+	public void setInterest(BigDecimal inInterest) {
 		interest = inInterest;
 	}
 	
-	/**
-	 * This method will recalculate the double into a bigdecimal.
-	 * 
-	 * @return A BigDecimal, which will have two decimal places.
-	 */
-	public BigDecimal getInterest() {
-		return new BigDecimal(String.valueOf(interest)).setScale(2, BigDecimal.ROUND_HALF_UP);
+	public double getInterest() {
+		return interest;
 	}
 	
 	

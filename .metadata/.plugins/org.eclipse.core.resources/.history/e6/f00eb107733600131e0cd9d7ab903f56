@@ -55,7 +55,6 @@ public class Account {
 	
 	/**
 	 * This method will recalculate the double into a bigdecimal.
-	 * 
 	 * @return A BigDecimal, which will have two decimal places.
 	 */
 	public BigDecimal getInterest() {

@@ -1,0 +1,44 @@
+package maintenance;
+
+import java.math.BigDecimal;
+
+public class AccountUpdate {
+	private int accountNumber;
+	private String strUpdate;
+	private BigDecimal strValue;
+	
+	public AccountUpdate() {
+		this(0, "", new BigDecimal(0));
+	}
+	
+	public AccountUpdate(int inAccountNumber, String inStrUpdate, BigDecimal inStrValue) {
+		setAccountNumber(inAccountNumber);
+		setStrUpdate(inStrUpdate);
+		setStrValue(inStrValue);
+	}
+
+	public int getAccountNumber() {
+		return accountNumber;
+	}
+	public void setAccountNumber(int inAccountNumber) {
+		accountNumber = inAccountNumber;
+	}
+
+	public String getStrUpdate() {
+		return strUpdate;
+	}
+	public void setStrUpdate(String inStrUpdate) {
+		strUpdate = inStrUpdate;
+	}
+
+	public BigDecimal getStrValue() {
+		return strValue;
+	}
+	public void setStrValue(BigDecimal inStrValue) {
+		strValue = inStrValue;
+	}
+	
+	public String toString() {
+		return accountNumber + "\t" + strUpdate + "\t" + strValue;
+	}
+}

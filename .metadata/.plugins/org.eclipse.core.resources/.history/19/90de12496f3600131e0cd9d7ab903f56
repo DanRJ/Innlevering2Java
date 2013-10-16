@@ -12,7 +12,8 @@ public class Client {
 //			Account account = AccountMaintenance.getAccount("accounts", "22222222");
 			
 //			AccountMaintenance.updateAccounts("accounts", "accountupdate");
-			acmt.insertDefaultRowsInTable("accounts");
+			acmt.deleteRowsFromTable("accounts");
+//			acmt.insertDefaultRowsInTable("accounts");
 			
 			} catch (Exception e) {
 			e.printStackTrace();

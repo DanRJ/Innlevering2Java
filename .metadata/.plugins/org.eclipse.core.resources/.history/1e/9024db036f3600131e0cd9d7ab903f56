@@ -1,6 +1,8 @@
 package client;
 
+import java.util.Map;
 
+import maintenance.Account;
 import maintenance.AccountMaintenance;
 
 public class Client {
@@ -11,8 +13,8 @@ public class Client {
 //			Map<String, Account> test = AccountMaintenance.getAccounts("accounts");
 //			Account account = AccountMaintenance.getAccount("accounts", "22222222");
 			
-//			AccountMaintenance.updateAccounts("accounts", "accountupdate");
-			acmt.insertDefaultRowsInTable("accounts");
+			AccountMaintenance.updateAccounts("accounts", "accountupdate");
+			
 			
 			} catch (Exception e) {
 			e.printStackTrace();
