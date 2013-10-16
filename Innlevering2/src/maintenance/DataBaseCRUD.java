@@ -1,12 +1,128 @@
 package maintenance;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import maintenance.AccountUpdate;
+import maintenance.Account;
 
-public class DataBaseCRUD {
+import db.ConnectToDB;
+
+public class DataBaseCRUD implements AutoCloseable{
+	private static final String QUERY = "SELECT * FROM ";
+	private static final int NUMBER_OF_COLUMNS = 3;
+	private ConnectToDB db;
+	private Connection connection;
+	
+	public DataBaseCRUD(String user, String password) throws SQLException {
+		db = new ConnectToDB(user, password);
+		connection = db.getConnection();
+	}
+	
+	public List<String> dbQuery(String query) throws SQLException {
+		try(Statement stmt = connection.createStatement()) {
+			
+			ResultSet rs = stmt.executeQuery(query);
+			ResultSetMetaData rsMetaData = rs.getMetaData();
+			
+			List<String> content = new ArrayList<>();
+			
+			while(rs.next()) {
+				for (int i = 1; i <= rsMetaData.getColumnCount(); i++) {
+					content.add(rs.getObject(i).toString());
+				}
+			}
+			return content;
+		}
+	}
+	
+	public Map<String, Account> getAccountsFromDB(String tableName) throws SQLException {
+		try (Statement stmt = connection.createStatement()) {
+			
+			Map<String, Account> mapOfAccounts = new HashMap<String, Account>();
+			
+			List<String> content = dbQuery(QUERY + tableName);
+			List<Account> newAccountObjects = makeNewAccounts(content, NUMBER_OF_COLUMNS);
+			
+			for (Account account2 : newAccountObjects) {
+				mapOfAccounts.put(String.valueOf(account2.getAccountNumber()), account2);
+			}
+			
+			return mapOfAccounts;
+		}
+	}
+	
+	private void statementIntoDB(String query2) throws SQLException {
+		try(Statement stmt = connection.createStatement()) {
+			stmt.executeUpdate(query2);
+		}
+	}
+
+	private List<Account> makeNewAccounts(List<String> content, int numberOfColumns) {
+		List<Account> account = new ArrayList<Account>();
+
+		for (int i = 0; i < content.size(); i += numberOfColumns) {
+			account.add(new Account(
+					Integer.valueOf(content.get(i)),
+					Integer.valueOf(content.get(i + 1)), 
+					Double.valueOf(content.get(i + 2))
+					));
+		}
+		return account;
+	}
+	
+	public String insertIntoDB(String tableName, Account inAccount) throws SQLException {
+			String query = "INSERT INTO " + tableName + " VALUES (";
+			String values = inAccount.getAccountNumber() + ", " + inAccount.getBalance() + ", " + inAccount.getInterest() + " );";
+			
+			query += values;
+			
+			return query;
+	}
+
+	public void updateValuesInDB(Map<String, Account> inAccountMap, String tableName) throws SQLException {
+		Map<String, Account> dbCheck = getAccountsFromDB(tableName);
+		String query = "UPDATE " + tableName + "\n";
+		
+		for (String key : inAccountMap.keySet()) {
+			String set = "SET balance = '" + inAccountMap.get(key).getBalance() + "', interest = '" + inAccountMap.get(key).getInterest() + "'\n";
+			String where = "WHERE accountNumber = '" + inAccountMap.get(key).getAccountNumber() + "';";
+			
+			query += set + where;
+			
+			statementIntoDB(query);
+			
+			query = "UPDATE " + tableName + "\n";
+			
+			if (!dbCheck.containsKey(key)) {
+				statementIntoDB(insertIntoDB(tableName, inAccountMap.get(key)));
+			}
+		}
+		
+	}
+
+	public List<AccountUpdate> makeNewAccountUpdates(List<String> content, int numberOfColumns) {
+		List<AccountUpdate> accountUpdates = new LinkedList<AccountUpdate>();
+		
+		for (int i = 0; i < content.size(); i += numberOfColumns) {
+			accountUpdates.add(new AccountUpdate(
+					Integer.valueOf(content.get(i)),
+					String.valueOf(content.get(i + 1)),
+					Double.valueOf(content.get(i + 2))
+					));
+		}
+		
+		return accountUpdates;
+	}
+
+
 	/**
 	 * A crude way to reset a table.
 	 * 
@@ -49,36 +165,9 @@ public class DataBaseCRUD {
  		}
 	}
 
-	public static String insertIntoDB(String tableName, Account inAccount) throws SQLException {
-			String query = "INSERT INTO " + tableName + " VALUES (";
-			String values = inAccount.getAccountNumber() + ", " + inAccount.getBalance() + ", " + inAccount.getInterest() + " );";
-			
-			query += values;
-			
-			return query;
-	}
-
-	public static void updateValuesInDB(Map<String, Account> inAccountMap, String tableName) throws SQLException {
-		//UPDATE tableName
-		//SET balance = 'balansen i mappet', interest = 'interesten i mappet'
-		//WHERE accountNumber = 'accountnumber i mappen'
-		Map<String, Account> dbCheck = getAccounts(tableName);
-		String query = "UPDATE " + tableName + "\n";
-		
-		for (String key : inAccountMap.keySet()) {
-			String set = "SET balance = '" + inAccountMap.get(key).getBalance() + "', interest = '" + inAccountMap.get(key).getInterest() + "'\n";
-			String where = "WHERE accountNumber = '" + inAccountMap.get(key).getAccountNumber() + "';";
-			
-			query += set + where;
-			
-			statementIntoDB(query);
-			
-			query = "UPDATE " + tableName + "\n";
-			
-			if (!dbCheck.containsKey(key)) {
-				statementIntoDB(insertIntoDB(tableName, inAccountMap.get(key)));
-			}
-		}
-		
+	@Override
+	public void close() throws Exception {
+		connection.close();
+		db.close();
 	}
 }

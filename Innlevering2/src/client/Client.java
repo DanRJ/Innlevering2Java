@@ -2,17 +2,20 @@ package client;
 
 
 import maintenance.AccountMaintenance;
+import maintenance.DataBaseCRUD;
 
 public class Client {
 
 	public static void main(String[] args) {
-		try(AccountMaintenance acmt = new AccountMaintenance(args[0], args[1])) {
+		try(DataBaseCRUD dbCrud = new DataBaseCRUD(args[0], args[1])) {
+			AccountMaintenance.setConnection(dbCrud);
 			
-//			Map<String, Account> test = AccountMaintenance.getAccounts("accounts");
-//			Account account = AccountMaintenance.getAccount("accounts", "22222222");
+//			AccountMaintenance.getAccount("accounts", "11111111");
+//			AccountMaintenance.getAccounts("accounts");
+			AccountMaintenance.updateAccounts("accounts", "accountupdate");
 			
-//			AccountMaintenance.updateAccounts("accounts", "accountupdate");
-			acmt.insertDefaultRowsInTable("accounts");
+			
+			dbCrud.insertDefaultRowsInTable("accounts");
 			
 			} catch (Exception e) {
 			e.printStackTrace();

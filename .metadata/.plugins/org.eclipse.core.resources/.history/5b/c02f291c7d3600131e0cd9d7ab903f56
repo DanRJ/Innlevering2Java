@@ -1,0 +1,25 @@
+package client;
+
+
+import maintenance.AccountMaintenance;
+import maintenance.DataBaseCRUD;
+
+public class Client {
+
+	public static void main(String[] args) {
+		try(DataBaseCRUD dbCrud = new DataBaseCRUD(args[0], args[1])) {
+			AccountMaintenance.setConnection(dbCrud);
+			
+			System.out.println(AccountMaintenance.getAccount("accounts", "11111111"));
+//			Map<String, Account> test = AccountMaintenance.getAccounts("accounts");
+//			Account account = AccountMaintenance.getAccount("accounts", "22222222");
+			
+//			AccountMaintenance.updateAccounts("accounts", "accountupdate");
+			dbCrud.insertDefaultRowsInTable("accounts");
+			
+			} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+}
