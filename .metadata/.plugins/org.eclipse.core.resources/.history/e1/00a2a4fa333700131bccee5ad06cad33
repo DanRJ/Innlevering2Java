@@ -4,12 +4,6 @@ package client;
 import maintenance.AccountMaintenance;
 import maintenance.DataBaseCRUD;
 
-/**
- * The Client class
- * 
- * @author Daniel Rustad Johansen
- *
- */
 public class Client {
 
 	public static void main(String[] args) {

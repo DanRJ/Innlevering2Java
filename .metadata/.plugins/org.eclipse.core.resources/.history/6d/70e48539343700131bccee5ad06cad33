@@ -43,11 +43,10 @@ public class AccountMaintenance {
 					
 				} else {
 					int checkAccNumber = key.getAccountNumber();
-					
 					if (String.valueOf(checkAccNumber).length() == 8) {
 						accounts.put(
-									String.valueOf(checkAccNumber),
-									new Account(
+								String.valueOf(checkAccNumber),
+								new Account(
 										key.getAccountNumber(), 
 										Integer.valueOf(key.getStrUpdate()), 
 										key.getStrValue()));
@@ -61,17 +60,12 @@ public class AccountMaintenance {
 			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * Returns a Map of the objects from the specified table
-	 * 
-	 * @param tableName		a table in the database
-	 * @return				a Map<String, Account>
-	 */
+
 	public static Map<String, Account> getAccounts(String tableName) {
 		//I used try/catch instead of letting the 
 		//method throw an SQLException,
 		//since I thought we couldnt change the assignment
+				
 		try {
 			return dbCrud.getAccountsFromDB(tableName);
 			
@@ -93,10 +87,6 @@ public class AccountMaintenance {
 
 		List<String> accountData;
 		Account account = new Account();
-		
-		//I used try/catch instead of letting the 
-		//method throw an SQLException,
-		//since I thought we couldnt change the assignment
 		try {
 
 			accountData = dbCrud.dbQuery(QUERY + getAccQuery);

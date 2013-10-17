@@ -43,11 +43,10 @@ public class AccountMaintenance {
 					
 				} else {
 					int checkAccNumber = key.getAccountNumber();
-					
 					if (String.valueOf(checkAccNumber).length() == 8) {
 						accounts.put(
-									String.valueOf(checkAccNumber),
-									new Account(
+								String.valueOf(checkAccNumber),
+								new Account(
 										key.getAccountNumber(), 
 										Integer.valueOf(key.getStrUpdate()), 
 										key.getStrValue()));

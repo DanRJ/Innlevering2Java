@@ -1,11 +1,5 @@
 package maintenance;
 
-/**
- * AccountUpdate class
- * 
- * @author Daniel Rustad Johansen
- *
- */
 public class AccountUpdate {
 	private int accountNumber;
 	private String strUpdate;

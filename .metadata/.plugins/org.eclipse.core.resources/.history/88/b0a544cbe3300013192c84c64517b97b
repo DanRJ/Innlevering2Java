@@ -1,7 +1,0 @@
-package handler;
-
-import db.ConnectToDB;
-
-public class DBHandler {
-
-}

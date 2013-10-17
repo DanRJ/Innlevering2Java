@@ -3,7 +3,6 @@ package maintenance;
 import java.math.BigDecimal;
 
 /**
- * Account class
  * 
  * @author Daniel Rustad Johansen
  *

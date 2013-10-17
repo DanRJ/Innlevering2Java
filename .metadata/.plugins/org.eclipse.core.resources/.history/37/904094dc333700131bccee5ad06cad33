@@ -2,12 +2,6 @@ package maintenance;
 
 import java.math.BigDecimal;
 
-/**
- * Account class
- * 
- * @author Daniel Rustad Johansen
- *
- */
 public class Account {
 	private int accountNumber;
 	private int balance;
