@@ -1,0 +1,113 @@
+package maintenance;
+
+import java.sql.SQLException;
+import java.util.*;
+
+
+public class AccountMaintenance{
+	private static final String QUERY = "SELECT * FROM ";
+	private static Map<String, Account> accounts;
+	private static DataBaseCRUD dbCrud;
+
+	public static void updateAccounts(String tableName, String tableUpdate) {
+		//Makes new accounts and maps them out
+		accounts = getAccounts(tableName);
+		
+		//Sends a query to the db, extracts data and puts in a list
+		List<String> content;
+		
+		try {
+			content = dbCrud.dbQuery(QUERY + tableUpdate);
+		LinkedList<AccountUpdate> accountUpdates = (LinkedList<AccountUpdate>) dbCrud.makeNewAccountUpdates(content, 3);
+
+		for (AccountUpdate key : accountUpdates) {
+			if (accounts.containsKey(String.valueOf(key.getAccountNumber()))) {
+				
+				applyStrUpdates(key);
+				
+			}else {
+				int checkAccNumber = key.getAccountNumber();
+				if (String.valueOf(checkAccNumber).length() == 8) {
+					accounts.put(
+							String.valueOf(checkAccNumber), 
+							new Account(
+										key.getAccountNumber(),
+										Integer.valueOf(key.getStrUpdate()),
+										key.getStrValue()
+										)
+							);
+				}
+			}
+		}//End foreach
+		dbCrud.updateValuesInDB(accounts, tableName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static Map<String, Account> getAccounts(String tableName){
+		try {
+			return dbCrud.getAccountsFromDB(tableName);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static Account getAccount(String tableName, String accountNumber){
+		String getAccQuery = tableName + " WHERE ACCOUNTNUMBER = " + accountNumber;
+		
+		List<String> accountData;
+		Account account = new Account();
+		try {
+			
+			accountData = dbCrud.dbQuery(QUERY + getAccQuery);
+		
+			account = new Account(
+				Integer.valueOf(accountData.get(0)),
+				Integer.valueOf(accountData.get(1)), 
+				Double.valueOf(accountData.get(2))
+				);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return account;
+	}
+	
+	private static void applyStrUpdates(AccountUpdate key) {
+		String getUpdateValueAtKey = key.getStrUpdate();
+		double getValueAtKey = key.getStrValue();
+		String IntToString = String.valueOf(key.getAccountNumber());
+		Account accountGets = accounts.get(IntToString);
+		
+		if (getUpdateValueAtKey.equals("b+")) {
+			accountGets.increaseBalance((int) getValueAtKey);
+		}
+		else if (getUpdateValueAtKey.equals("b-")) {
+			accountGets.decreaseBalance((int) getValueAtKey);
+		}
+		else if (getUpdateValueAtKey.equals("i+")) {
+			accountGets.increaseInterest(getValueAtKey);
+		}
+		else if (getUpdateValueAtKey.equals("i-")) {
+			accountGets.decreaseInterest(getValueAtKey);
+		}
+		else if (getUpdateValueAtKey.equals("b")) {
+			accountGets.setBalance((int) getValueAtKey);
+		}
+		else if (getUpdateValueAtKey.equals("i")) {
+			accountGets.setInterest(getValueAtKey);
+		}
+		else if (getUpdateValueAtKey.equals("")) {
+			System.out.println("No update value found!");
+		}
+	}
+	
+	public static void setConnection(DataBaseCRUD inDbCrud) {
+		dbCrud = inDbCrud;
+	}
+	
+}

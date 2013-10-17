@@ -8,13 +8,13 @@ import javax.naming.NamingException;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
-/*
- * Laget av:
- * Daniel Rustad Johansen
+/**
+ * 
+ * @author Daniel Rustad Johansen
+ *
  */
-
 public class ConnectToDB implements AutoCloseable {
-	private static final String URL = "jdbc:mysql://localhost/";
+	private static final String URL = "localhost";
 	private Connection connection;
 	private MysqlDataSource ds;
 	
@@ -26,7 +26,8 @@ public class ConnectToDB implements AutoCloseable {
 		ds = new MysqlDataSource();
 		ds.setUser(user);
 		ds.setPassword(password);
-		ds.setUrl(URL + dbName);
+		ds.setServerName(URL);
+		ds.setDatabaseName(dbName);
 		
 		connection = ds.getConnection();
 	}

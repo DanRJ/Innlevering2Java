@@ -10,13 +10,11 @@ public class Client {
 		try(DataBaseCRUD dbCrud = new DataBaseCRUD(args[0], args[1])) {
 			AccountMaintenance.setConnection(dbCrud);
 			
+			dbCrud.insertDefaultRowsInTable("accounts");
+			
 			AccountMaintenance.getAccount("accounts", "11111111");
-			
 			AccountMaintenance.getAccounts("accounts");
-			
-			AccountMaintenance.updateAccounts("accounts", "accountupdate");
-			
-//			dbCrud.insertDefaultRowsInTable("accounts");
+//			AccountMaintenance.updateAccounts("accounts", "accountupdate");
 			
 			} catch (Exception e) {
 			e.printStackTrace();
